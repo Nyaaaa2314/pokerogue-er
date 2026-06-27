@@ -160,6 +160,7 @@ import {
   ReflectStatusMoveAbAttr,
   ReverseDrainAbAttr,
   RunSuccessAbAttr,
+  ScareImmunityAbAttr,
   SpeedBoostAbAttr,
   StabBoostAbAttr,
   StatMultiplierAbAttr,
@@ -275,6 +276,7 @@ export function initAbilities() {
       .attr(BattlerTagImmunityAbAttr, [BattlerTagType.INFATUATED, BattlerTagType.TAUNT])
       .attr(PostSummonRemoveBattlerTagAbAttr, BattlerTagType.INFATUATED, BattlerTagType.TAUNT)
       .attr(IntimidateImmunityAbAttr)
+      .attr(ScareImmunityAbAttr)
       .ignorable()
       .build(),
     new AbBuilder(AbilityId.CLOUD_NINE, 3) //
@@ -344,6 +346,7 @@ export function initAbilities() {
         PokemonType.GROUND,
         (pokemon: Pokemon) => !pokemon.getTag(GroundedTag) && !globalScene.arena.getTag(ArenaTagType.GRAVITY),
       )
+      .attr(MoveTypePowerBoostAbAttr, PokemonType.FLYING, 1.25, true)
       .ignorable()
       .build(),
     new AbBuilder(AbilityId.EFFECT_SPORE, 3) //
@@ -2168,6 +2171,9 @@ export function initAbilities() {
     new AbBuilder(AbilityId.POISON_PUPPETEER, 9) //
       .uncopiable()
       .attr(ConfusionOnStatusEffectAbAttr, StatusEffect.POISON, StatusEffect.TOXIC)
+      .build(),
+    new AbBuilder(AbilityId.SCARE, 9) //
+      .attr(PostSummonStatStageChangeAbAttr, [{ stat: Stat.SPATK, stages: -1 }], false, false, true)
       .build(),
   );
 }

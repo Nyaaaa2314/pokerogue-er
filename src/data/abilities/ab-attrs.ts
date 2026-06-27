@@ -2167,7 +2167,42 @@ export class IntimidateImmunityAbAttr extends CancelInteractionAbAttr {
   }
 }
 
+export class ScareImmunityAbAttr extends CancelInteractionAbAttr {
+  constructor() {
+    super(false);
+  }
+
+  getTriggerMessage({ pokemon }: AbAttrParamsWithCancel, abilityName: string, ..._args: any[]): string {
+    return i18next.t("abilityTriggers:scareImmunity", {
+      pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      abilityName,
+    });
+  }
+}
+
 export class PostIntimidateStatStageChangeAbAttr extends AbAttr {
+  private readonly changes: readonly StatChange[];
+  private readonly overwrites: boolean;
+
+  constructor(changes: readonly StatChange[], overwrites?: boolean) {
+    super(true);
+    this.changes = changes;
+    this.overwrites = !!overwrites;
+  }
+
+  override apply({ pokemon, simulated, cancelled }: AbAttrParamsWithCancel): void {
+    if (!simulated) {
+      globalScene.phaseManager.unshiftNew("StatStageChangePhase", {
+        battlerIndex: pokemon.getBattlerIndex(),
+        changes: this.changes,
+        sourcePokemon: pokemon,
+      });
+    }
+    cancelled.value = this.overwrites;
+  }
+}
+
+export class PostScareStatStageChangeAbAttr extends AbAttr {
   private readonly changes: readonly StatChange[];
   private readonly overwrites: boolean;
 
@@ -2359,13 +2394,15 @@ export class PostSummonStatStageChangeAbAttr extends PostSummonAbAttr {
   private readonly changes: readonly StatChange[];
   private readonly selfTarget: boolean;
   private readonly intimidate: boolean;
+  private readonly scare: boolean;
 
-  constructor(changes: readonly StatChange[], selfTarget = false, intimidate = false) {
+  constructor(changes: readonly StatChange[], selfTarget = false, intimidate = false, scare = false) {
     super(true);
 
     this.changes = changes;
     this.selfTarget = selfTarget;
     this.intimidate = intimidate;
+    this.scare = scare;
   }
 
   override apply({ pokemon, simulated }: AbAttrBaseParams): void {
@@ -2391,6 +2428,15 @@ export class PostSummonStatStageChangeAbAttr extends PostSummonAbAttr {
         const params: AbAttrParamsWithCancel = { pokemon: opponent, cancelled, simulated };
         applyAbAttrs("IntimidateImmunityAbAttr", params);
         applyAbAttrs("PostIntimidateStatStageChangeAbAttr", params);
+
+        if (opponent.getTag(BattlerTagType.SUBSTITUTE)) {
+          cancelled.value = true;
+        }
+      }
+      if (this.scare) {
+        const params: AbAttrParamsWithCancel = { pokemon: opponent, cancelled, simulated };
+        applyAbAttrs("ScareImmunityAbAttr", params);
+        applyAbAttrs("PostScareStatStageChangeAbAttr", params);
 
         if (opponent.getTag(BattlerTagType.SUBSTITUTE)) {
           cancelled.value = true;
@@ -6088,6 +6134,8 @@ export const AbilityAttrs = Object.freeze({
   IncreasePpAbAttr,
   InfiltratorAbAttr,
   IntimidateImmunityAbAttr,
+  PostScareStatStageChangeAbAttr,
+  ScareImmunityAbAttr,
   LowHpMoveTypePowerBoostAbAttr,
   MaxMultiHitAbAttr,
   MoneyAbAttr,
