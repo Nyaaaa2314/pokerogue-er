@@ -328,6 +328,8 @@ export class StarterSelectUiHandler extends MessageUiHandler {
   private pokemonAbilityText: Phaser.GameObjects.Text;
   private pokemonPassiveLabelText: Phaser.GameObjects.Text;
   private pokemonPassiveText: Phaser.GameObjects.Text;
+  private pokemonPassiveText2: Phaser.GameObjects.Text;
+  private pokemonPassiveText3: Phaser.GameObjects.Text;
   private pokemonNatureLabelText: Phaser.GameObjects.Text;
   private pokemonNatureText: BBCodeText;
   private pokemonMovesContainer: Phaser.GameObjects.Container;
@@ -355,7 +357,7 @@ export class StarterSelectUiHandler extends MessageUiHandler {
   private pokemonPassiveLockedIcon: Phaser.GameObjects.Sprite;
   private teraIcon: Phaser.GameObjects.Sprite;
 
-  private activeTooltip: "ABILITY" | "PASSIVE" | "CANDY" | undefined;
+  private activeTooltip: "ABILITY" | "PASSIVE" | "CANDY" | "PASSIVE2" | "PASSIVE3" | undefined;
   private instructionsContainer: Phaser.GameObjects.Container;
   private filterInstructionsContainer: Phaser.GameObjects.Container;
   private shinyIconElement: Phaser.GameObjects.Sprite;
@@ -678,6 +680,7 @@ export class StarterSelectUiHandler extends MessageUiHandler {
 
     // The font size should be set per language
     const starterInfoTextSize = textSettings?.starterInfoTextSize || 56;
+    const passiveTextSize = 48;
 
     this.pokemonAbilityLabelText = addTextObject(
       6,
@@ -705,9 +708,33 @@ export class StarterSelectUiHandler extends MessageUiHandler {
       .setOrigin(0)
       .setVisible(false);
 
-    this.pokemonPassiveText = addTextObject(starterInfoXPos, 136 + starterInfoYOffset, "", TextStyle.SUMMARY_ALT, {
-      fontSize: starterInfoTextSize,
+    this.pokemonPassiveText = addTextObject(6, 136 + starterInfoYOffset, "", TextStyle.SUMMARY_ALT, {
+      fontSize: passiveTextSize,
     })
+      .setOrigin(0)
+      .setInteractive(new Phaser.Geom.Rectangle(0, 0, 250, 55), Phaser.Geom.Rectangle.Contains);
+
+    this.pokemonPassiveText2 = addTextObject(
+      this.pokemonPassiveText.width,
+      136 + starterInfoYOffset,
+      "",
+      TextStyle.SUMMARY_ALT,
+      {
+        fontSize: passiveTextSize,
+      },
+    )
+      .setOrigin(0)
+      .setInteractive(new Phaser.Geom.Rectangle(0, 0, 250, 55), Phaser.Geom.Rectangle.Contains);
+
+    this.pokemonPassiveText3 = addTextObject(
+      this.pokemonPassiveText2.width,
+      136 + starterInfoYOffset,
+      "",
+      TextStyle.SUMMARY_ALT,
+      {
+        fontSize: passiveTextSize,
+      },
+    )
       .setOrigin(0)
       .setInteractive(new Phaser.Geom.Rectangle(0, 0, 250, 55), Phaser.Geom.Rectangle.Contains);
 
@@ -1157,6 +1184,8 @@ export class StarterSelectUiHandler extends MessageUiHandler {
       this.pokemonAbilityText,
       this.pokemonPassiveLabelText,
       this.pokemonPassiveText,
+      this.pokemonPassiveText2,
+      this.pokemonPassiveText3,
       this.pokemonPassiveDisabledIcon,
       this.pokemonPassiveLockedIcon,
       this.pokemonNatureLabelText,
@@ -1247,6 +1276,8 @@ export class StarterSelectUiHandler extends MessageUiHandler {
       this.pokemonPassiveLabelText.setVisible(notFreshStart);
       this.pokemonPassiveLockedIcon.setVisible(notFreshStart);
       this.pokemonPassiveText.setVisible(notFreshStart);
+      this.pokemonPassiveText2.setVisible(notFreshStart);
+      this.pokemonPassiveText3.setVisible(notFreshStart);
 
       this.resetFilters();
       this.updateStarters();
@@ -3579,6 +3610,8 @@ export class StarterSelectUiHandler extends MessageUiHandler {
 
     this.pokemonAbilityText.off("pointerover");
     this.pokemonPassiveText.off("pointerover");
+    this.pokemonPassiveText2.off("pointerover");
+    this.pokemonPassiveText3.off("pointerover");
 
     const starterAttributes: StarterAttributes | null = species
       ? { ...this.starterPreferences[species.speciesId] }
@@ -3655,7 +3688,7 @@ export class StarterSelectUiHandler extends MessageUiHandler {
         this.pokemonGrowthRateLabelText.setVisible(true);
         this.pokemonUncaughtText.setVisible(false);
         this.pokemonAbilityLabelText.setVisible(true);
-        this.pokemonPassiveLabelText.setVisible(true);
+        this.pokemonPassiveLabelText.setVisible(false);
         this.pokemonNatureLabelText.setVisible(true);
         this.pokemonCaughtCountText.setText(`${this.speciesStarterDexEntry.caughtCount}`);
         if (species.speciesId === SpeciesId.MANAPHY || species.speciesId === SpeciesId.PHIONE) {
@@ -3941,6 +3974,8 @@ export class StarterSelectUiHandler extends MessageUiHandler {
     this.pokemonSprite.setVisible(false);
     this.pokemonPassiveLabelText.setVisible(false);
     this.pokemonPassiveText.setVisible(false);
+    this.pokemonPassiveText2.setVisible(false);
+    this.pokemonPassiveText3.setVisible(false);
     this.pokemonPassiveDisabledIcon.setVisible(false);
     this.pokemonPassiveLockedIcon.setVisible(false);
     this.teraIcon.setVisible(false);
@@ -4109,8 +4144,8 @@ export class StarterSelectUiHandler extends MessageUiHandler {
           .setShadowColor(getTextColor(isHidden ? TextStyle.SUMMARY_GOLD : TextStyle.SUMMARY_ALT, true));
 
         const passiveAttr = starterDataEntry.passiveAttr;
-        const passiveAbility = allAbilities[this.lastSpecies.getPassiveAbility(formIndex)];
-
+        //const passiveAbility = allAbilities[this.lastSpecies.getPassiveAbility(formIndex)];
+        const passiveAbilities = this.lastSpecies.getPassiveAbilities(formIndex);
         if (this.pokemonAbilityText.visible) {
           if (this.activeTooltip === "ABILITY") {
             globalScene.ui.editTooltip(`${ability.name}`, `${ability.description}`);
@@ -4126,7 +4161,7 @@ export class StarterSelectUiHandler extends MessageUiHandler {
           });
         }
 
-        if (passiveAbility) {
+        if (passiveAbilities) {
           const isUnlocked = !!(passiveAttr & PassiveAttr.UNLOCKED);
           const isEnabled = !!(passiveAttr & PassiveAttr.ENABLED);
 
@@ -4134,29 +4169,103 @@ export class StarterSelectUiHandler extends MessageUiHandler {
           const textAlpha = isUnlocked && isEnabled ? 1 : 0.5;
 
           this.pokemonPassiveLabelText
-            .setVisible(!isFreshStartChallenge)
+            .setVisible(false) //!isFreshStartChallenge)
             .setColor(getTextColor(TextStyle.SUMMARY_ALT))
             .setShadowColor(getTextColor(TextStyle.SUMMARY_ALT, true));
-          this.pokemonPassiveText
-            .setVisible(!isFreshStartChallenge)
-            .setText(passiveAbility.name)
-            .setColor(getTextColor(textStyle))
-            .setAlpha(textAlpha)
-            .setShadowColor(getTextColor(textStyle, true));
+          if (passiveAbilities.length > 1) {
+            for (let i = 0; i < passiveAbilities.length; i++) {
+              const passiveAbility = allAbilities[passiveAbilities[i]];
+              switch (i) {
+                case 0:
+                  this.pokemonPassiveText
+                    .setVisible(!isFreshStartChallenge)
+                    .setText(passiveAbility.name + " |")
+                    .setColor(getTextColor(textStyle))
+                    .setAlpha(textAlpha)
+                    .setShadowColor(getTextColor(textStyle, true));
+                  if (this.activeTooltip === "PASSIVE") {
+                    globalScene.ui.editTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`);
+                  }
+                  if (this.pokemonPassiveText.visible) {
+                    this.pokemonPassiveText.on("pointerover", () => {
+                      globalScene.ui.showTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`, true);
+                      this.activeTooltip = "PASSIVE";
+                    });
+                    this.pokemonPassiveText.on("pointerout", () => {
+                      globalScene.ui.hideTooltip();
+                      this.activeTooltip = undefined;
+                    });
+                  }
+                  break;
+                case 1:
+                  this.pokemonPassiveText2
+                    .setVisible(!isFreshStartChallenge)
+                    .setText(passiveAbility.name + " |")
+                    .setColor(getTextColor(textStyle))
+                    .setAlpha(textAlpha)
+                    .setShadowColor(getTextColor(textStyle, true))
+                    .setX(this.pokemonPassiveText.x + this.pokemonPassiveText.displayWidth + 1);
+                  if (this.activeTooltip === "PASSIVE2") {
+                    globalScene.ui.editTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`);
+                  }
+                  if (this.pokemonPassiveText2.visible) {
+                    this.pokemonPassiveText2.on("pointerover", () => {
+                      globalScene.ui.showTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`, true);
+                      this.activeTooltip = "PASSIVE2";
+                    });
+                    this.pokemonPassiveText2.on("pointerout", () => {
+                      globalScene.ui.hideTooltip();
+                      this.activeTooltip = undefined;
+                    });
+                  }
+                  break;
+                case 2:
+                  this.pokemonPassiveText3
+                    .setVisible(!isFreshStartChallenge)
+                    .setText(passiveAbility.name)
+                    .setColor(getTextColor(textStyle))
+                    .setAlpha(textAlpha)
+                    .setShadowColor(getTextColor(textStyle, true))
+                    .setX(this.pokemonPassiveText2.x + this.pokemonPassiveText2.displayWidth + 1);
+                  if (this.activeTooltip === "PASSIVE3") {
+                    globalScene.ui.editTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`);
+                  }
+                  if (this.pokemonPassiveText3.visible) {
+                    this.pokemonPassiveText3.on("pointerover", () => {
+                      globalScene.ui.showTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`, true);
+                      this.activeTooltip = "PASSIVE3";
+                    });
+                    this.pokemonPassiveText3.on("pointerout", () => {
+                      globalScene.ui.hideTooltip();
+                      this.activeTooltip = undefined;
+                    });
+                  }
+                  break;
+              }
+            }
+          } else {
+            const passiveAbility = allAbilities[passiveAbilities[0]];
+            this.pokemonPassiveText
+              .setVisible(!isFreshStartChallenge)
+              .setText(passiveAbility.name)
+              .setColor(getTextColor(textStyle))
+              .setAlpha(textAlpha)
+              .setShadowColor(getTextColor(textStyle, true));
 
-          if (this.activeTooltip === "PASSIVE") {
-            globalScene.ui.editTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`);
-          }
+            if (this.activeTooltip === "PASSIVE") {
+              globalScene.ui.editTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`);
+            }
 
-          if (this.pokemonPassiveText.visible) {
-            this.pokemonPassiveText.on("pointerover", () => {
-              globalScene.ui.showTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`, true);
-              this.activeTooltip = "PASSIVE";
-            });
-            this.pokemonPassiveText.on("pointerout", () => {
-              globalScene.ui.hideTooltip();
-              this.activeTooltip = undefined;
-            });
+            if (this.pokemonPassiveText.visible) {
+              this.pokemonPassiveText.on("pointerover", () => {
+                globalScene.ui.showTooltip(`${passiveAbility.name}`, `${passiveAbility.description}`, true);
+                this.activeTooltip = "PASSIVE";
+              });
+              this.pokemonPassiveText.on("pointerout", () => {
+                globalScene.ui.hideTooltip();
+                this.activeTooltip = undefined;
+              });
+            }
           }
 
           const iconPosition = {
