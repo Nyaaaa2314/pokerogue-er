@@ -51,11 +51,13 @@ function applySingleAbAttrs<T extends AbAttrString>(
       let abShown = false;
 
       if (attr.showAbility && !simulated) {
-        globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, true);
+        //get index of ab in ability
+        const abilityIndex = ability.length === 1 ? -1 : ability.findIndex(a => a.id === ab.id);
+        globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, true, abilityIndex);
         abShown = true;
       }
 
-      const message = attr.getTriggerMessage(params as any, ability.name);
+      const message = attr.getTriggerMessage(params as any, ab.name);
       if (message) {
         if (!simulated) {
           globalScene.phaseManager.queueMessage(message);
@@ -72,8 +74,8 @@ function applySingleAbAttrs<T extends AbAttrString>(
       }
 
       if (!simulated) {
-        pokemon.waveData.abilitiesApplied.add(ability.id);
-        pokemon.summonData.abilitiesApplied.add(ability.id);
+        pokemon.waveData.abilitiesApplied.add(ab.id);
+        pokemon.summonData.abilitiesApplied.add(ab.id);
       }
     }
   }

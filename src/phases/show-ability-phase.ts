@@ -10,7 +10,7 @@ export class ShowAbilityPhase extends PokemonPhase {
   private abilityName: string;
   private pokemonOnField: boolean;
 
-  constructor(battlerIndex: BattlerIndex, passive = false) {
+  constructor(battlerIndex: BattlerIndex, passive = false, innate = -1) {
     super(battlerIndex);
 
     this.passive = passive;
@@ -19,7 +19,13 @@ export class ShowAbilityPhase extends PokemonPhase {
     if (pokemon) {
       // Set these now as the pokemon object may change before the queued phase is run
       this.pokemonName = getPokemonNameWithAffix(pokemon);
-      this.abilityName = (passive ? this.getPokemon().getPassiveAbility() : this.getPokemon().getAbility()).name;
+      if (innate === -1) {
+        this.abilityName = (passive ? this.getPokemon().getPassiveAbility() : this.getPokemon().getAbility()).name;
+      } else if (passive) {
+        this.abilityName = this.getPokemon().getPassiveAbilities()[innate].name;
+      } else {
+        this.abilityName = this.getPokemon().getAbility().name;
+      }
       this.pokemonOnField = true;
     } else {
       this.pokemonOnField = false;

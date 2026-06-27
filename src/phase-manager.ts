@@ -454,8 +454,8 @@ export class PhaseManager {
    * @param passive - Whether the ability is a passive
    * @param show - If `true`, show the bar. Otherwise, hide it
    */
-  public queueAbilityDisplay(pokemon: Pokemon, passive: boolean, show: boolean): void {
-    this.unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive) : new HideAbilityPhase());
+  public queueAbilityDisplay(pokemon: Pokemon, passive: boolean, show: boolean, innate = -1): void {
+    this.unshiftPhase(show ? new ShowAbilityPhase(pokemon.getBattlerIndex(), passive, innate) : new HideAbilityPhase());
   }
 
   /**
