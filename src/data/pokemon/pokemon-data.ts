@@ -84,7 +84,7 @@ interface SerializedPokemonSummonData {
   speciesForm?: SerializedSpeciesForm | undefined;
   fusionSpeciesForm?: SerializedSpeciesForm | undefined;
   ability?: AbilityId | undefined;
-  passiveAbility?: AbilityId | undefined;
+  passiveAbility?: AbilityId | [AbilityId] | undefined;
   gender?: Gender | undefined;
   fusionGender?: Gender | undefined;
   stats: number[];
@@ -123,7 +123,7 @@ export class PokemonSummonData {
   public speciesForm: PokemonSpeciesForm | null = null;
   public fusionSpeciesForm: PokemonSpeciesForm | null = null;
   public ability: AbilityId | undefined;
-  public passiveAbility: AbilityId | undefined;
+  public passiveAbility: AbilityId | [AbilityId] | undefined;
   public gender: Gender | undefined;
   public fusionGender: Gender | undefined;
   public stats: number[] = [0, 0, 0, 0, 0, 0];

@@ -204,6 +204,10 @@ export abstract class PokemonSpeciesForm {
     return speciesDataRegistry.getPassive(this.speciesId, formIndex);
   }
 
+  getPassiveAbilities(formIndex = this.formIndex): AbilityId[] {
+    return speciesDataRegistry.getPassives(this.speciesId, formIndex);
+  }
+
   /**
    * Get a list of all level moves for this species, including form specific moves.
    * @param formKey - (Optional) The key for the form to be checked. Uses the base form if not specified

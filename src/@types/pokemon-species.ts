@@ -34,7 +34,7 @@ export interface PokemonSpeciesData {
   /** The egg tier of the Pokémon. Should be omitted for non starters */
   eggTier?: EggTier;
   /** The passive ability of the species or a mapping of its formIndex to a passive ability */
-  passives: AbilityId | PokemonSpeciesPassives;
+  passives: AbilityId | PokemonSpeciesPassives | [AbilityId];
   levelMoves: LevelMoves;
   formLevelMoves?: SpeciesFormLevelMoves;
   tms: MoveId[];

@@ -213,6 +213,15 @@ export class SpeciesDataRegistry {
     }
     return typeof passives === "object" ? passives[formIndex] : passives;
   }
+  public getPassives(speciesId: SpeciesId, form: string | number): AbilityId[] {
+    const speciesData = this.getSpeciesData(speciesId);
+    let formIndex = this.getFormIndex(speciesId, form);
+    const passives = speciesData.passives;
+    if (typeof passives === "object" && !(formIndex in passives)) {
+      formIndex = 0;
+    }
+    return typeof passives === "object" ? (Array.isArray(passives) ? passives : [passives[formIndex]]) : [passives];
+  }
 
   /**
    * Check if a given species is a starter.

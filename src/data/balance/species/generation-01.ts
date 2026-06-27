@@ -26,7 +26,7 @@ export function initGenerationOne(): SpeciesDataMapConfig {
       height: 0.7,
       weight: 6.9,
       ability1: AbilityId.OVERGROW,
-      ability2: AbilityId.NONE,
+      ability2: AbilityId.PROTEAN,
       abilityHidden: AbilityId.CHLOROPHYLL,
       baseTotal: 318,
       baseHp: 45,
@@ -46,7 +46,7 @@ export function initGenerationOne(): SpeciesDataMapConfig {
     starterCost: 3,
     evolutions: [new SpeciesEvolution({ speciesId: SpeciesId.IVYSAUR, level: 16 })],
     eggTier: EggTier.COMMON,
-    passives: AbilityId.GRASSY_SURGE,
+    passives: [AbilityId.PROTEAN, AbilityId.SPEED_BOOST, AbilityId.GRASSY_SURGE],
     levelMoves: [
       [1, MoveId.TACKLE],
       [1, MoveId.GROWL],

@@ -29,50 +29,52 @@ function applySingleAbAttrs<T extends AbAttrString>(
     return;
   }
 
-  const ability = passive ? pokemon.getPassiveAbility() : pokemon.getAbility();
-  const attrs = ability.getAttrs(attrType);
+  const ability = passive ? pokemon.getPassiveAbilities() : [pokemon.getAbility()];
+  for (const ab of ability) {
+    const attrs = ab.getAttrs(attrType);
 
-  for (const attr of attrs) {
-    if (!attrFilter(attr)) {
-      continue;
-    }
-
-    // TODO: Make `getCondition` default to `() => true` instead of `null`
-    const condition = attr.getCondition();
-    // We require an `as any` cast to suppress an error about the `params` type not being assignable to
-    // the type of the argument expected by `attr.canApply()`. This is OK, because we know that
-    // `attr` is an instance of the `attrType` class provided to the method, and typescript _will_ check
-    // that the `params` object has the correct properties for that class at the callsites.
-    if ((condition && !condition(pokemon)) || !attr.canApply(params as any)) {
-      continue;
-    }
-
-    let abShown = false;
-
-    if (attr.showAbility && !simulated) {
-      globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, true);
-      abShown = true;
-    }
-
-    const message = attr.getTriggerMessage(params as any, ability.name);
-    if (message) {
-      if (!simulated) {
-        globalScene.phaseManager.queueMessage(message);
+    for (const attr of attrs) {
+      if (!attrFilter(attr)) {
+        continue;
       }
-      // TODO: Should messages be added to the array if they aren't actually shown?
-      messages?.push(message);
-    }
 
-    // The `as any` cast here uses the same reasoning as above.
-    attr.apply(params as any);
+      // TODO: Make `getCondition` default to `() => true` instead of `null`
+      const condition = attr.getCondition();
+      // We require an `as any` cast to suppress an error about the `params` type not being assignable to
+      // the type of the argument expected by `attr.canApply()`. This is OK, because we know that
+      // `attr` is an instance of the `attrType` class provided to the method, and typescript _will_ check
+      // that the `params` object has the correct properties for that class at the callsites.
+      if ((condition && !condition(pokemon)) || !attr.canApply(params as any)) {
+        continue;
+      }
 
-    if (abShown) {
-      globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, false);
-    }
+      let abShown = false;
 
-    if (!simulated) {
-      pokemon.waveData.abilitiesApplied.add(ability.id);
-      pokemon.summonData.abilitiesApplied.add(ability.id);
+      if (attr.showAbility && !simulated) {
+        globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, true);
+        abShown = true;
+      }
+
+      const message = attr.getTriggerMessage(params as any, ability.name);
+      if (message) {
+        if (!simulated) {
+          globalScene.phaseManager.queueMessage(message);
+        }
+        // TODO: Should messages be added to the array if they aren't actually shown?
+        messages?.push(message);
+      }
+
+      // The `as any` cast here uses the same reasoning as above.
+      attr.apply(params as any);
+
+      if (abShown) {
+        globalScene.phaseManager.queueAbilityDisplay(pokemon, passive, false);
+      }
+
+      if (!simulated) {
+        pokemon.waveData.abilitiesApplied.add(ability.id);
+        pokemon.summonData.abilitiesApplied.add(ability.id);
+      }
     }
   }
 }

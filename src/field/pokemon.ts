@@ -2116,6 +2116,11 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
     return allAbilities[this.species.getPassiveAbility(this.formIndex)];
   }
 
+  //new function to return passives as an array, gonna keep the old one so the game still compiles and runs as its slowly rolled out across the codebase
+  getPassiveAbilities(): Ability[] {
+    return this.species.getPassiveAbilities(this.formIndex).map(abilityId => allAbilities[abilityId]);
+  }
+
   /**
    * Gets a list of all instances of a given ability attribute among abilities this pokemon has.
    * Accounts for all the various effects which can affect whether an ability will be present or
@@ -2281,9 +2286,14 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
     if (this.getAbility(ignoreOverride).id === ability && (!canApply || this.canApplyAbility())) {
       return true;
     }
+    const passiveAbilities = this.getPassiveAbilities();
+    for (const passiveAbility of passiveAbilities) {
+      if (passiveAbility.id === ability && (!canApply || this.canApplyAbility(true))) {
+        return true;
+      }
+    }
     return this.getPassiveAbility().id === ability && this.hasPassive() && (!canApply || this.canApplyAbility(true));
   }
-
   /**
    * Check whether this pokemon has an ability with the specified attribute in effect, either as a normal or passive ability.
    * Accounts for all the various effects which can disable or modify abilities.
@@ -2295,6 +2305,12 @@ export abstract class Pokemon extends Phaser.GameObjects.Container {
   public hasAbilityWithAttr(attrType: AbAttrString, canApply = true, ignoreOverride = false): boolean {
     if ((!canApply || this.canApplyAbility()) && this.getAbility(ignoreOverride).hasAttr(attrType)) {
       return true;
+    }
+    const passiveAbilities = this.getPassiveAbilities();
+    for (const passiveAbility of passiveAbilities) {
+      if ((!canApply || this.canApplyAbility(true)) && passiveAbility.hasAttr(attrType)) {
+        return true;
+      }
     }
     return this.hasPassive() && (!canApply || this.canApplyAbility(true)) && this.getPassiveAbility().hasAttr(attrType);
   }
