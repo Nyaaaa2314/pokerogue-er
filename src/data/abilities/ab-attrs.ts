@@ -939,6 +939,28 @@ export class PostDefendContactApplyStatusEffectAbAttr extends PostDefendAbAttr {
       && attacker.canSetStatus(effect, true, false, pokemon)
     );
   }
+}
+export class PostDefendNonContactApplyStatusEffectAbAttr extends PostDefendAbAttr {
+  private readonly chance: number;
+  private readonly effects: readonly StatusEffect[];
+
+  constructor(chance: number, ...effects: StatusEffect[]) {
+    super(true);
+
+    this.chance = chance;
+    this.effects = effects;
+  }
+
+  override canApply({ pokemon, move, opponent: attacker }: PostMoveInteractionAbAttrParams): boolean {
+    const effect =
+      this.effects.length === 1 ? this.effects[0] : this.effects[pokemon.randBattleSeedInt(this.effects.length)];
+    return (
+      !move.doesFlagEffectApply({ flag: MoveFlags.MAKES_CONTACT, user: attacker, target: pokemon })
+      && !attacker.status
+      && (this.chance === -1 || pokemon.randBattleSeedInt(100) < this.chance)
+      && attacker.canSetStatus(effect, true, false, pokemon)
+    );
+  }
 
   override apply({ opponent: attacker, pokemon }: PostMoveInteractionAbAttrParams): void {
     // TODO: Probably want to check against simulated here
@@ -6174,6 +6196,7 @@ export const AbilityAttrs = Object.freeze({
   PostDefendApplyArenaTrapTagAbAttr,
   PostDefendApplyBattlerTagAbAttr,
   PostDefendContactApplyStatusEffectAbAttr,
+  PostDefendNonContactApplyStatusEffectAbAttr,
   PostDefendContactApplyTagChanceAbAttr,
   PostDefendContactDamageAbAttr,
   PostDefendHpGatedStatStageChangeAbAttr,

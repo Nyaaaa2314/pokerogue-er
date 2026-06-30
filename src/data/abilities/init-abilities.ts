@@ -94,6 +94,7 @@ import {
   PostDefendContactDamageAbAttr,
   PostDefendHpGatedStatStageChangeAbAttr,
   PostDefendMoveDisableAbAttr,
+  PostDefendNonContactApplyStatusEffectAbAttr,
   PostDefendPerishSongAbAttr,
   PostDefendStatStageChangeAbAttr,
   PostDefendStealHeldItemAbAttr,
@@ -233,6 +234,7 @@ export function initAbilities() {
       .build(),
     new AbBuilder(AbilityId.BATTLE_ARMOR, 3) //
       .attr(BlockCritAbAttr)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, () => true, 0.8)
       .ignorable()
       .build(),
     new AbBuilder(AbilityId.STURDY, 3) //
@@ -451,6 +453,8 @@ export function initAbilities() {
       .build(),
     new AbBuilder(AbilityId.FLAME_BODY, 3) //
       .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.BURN)
+      .attr(PostDefendNonContactApplyStatusEffectAbAttr, 20, StatusEffect.BURN)
+      .attr(PostAttackContactApplyStatusEffectAbAttr, 30, StatusEffect.BURN)
       .bypassFaint()
       .build(),
     new AbBuilder(AbilityId.RUN_AWAY, 3) //

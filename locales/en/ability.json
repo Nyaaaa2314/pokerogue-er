@@ -13,7 +13,7 @@
   },
   "battleArmor": {
     "name": "Battle Armor",
-    "description": "Hard armor protects the Pokémon from critical hits."
+    "description": "Hard armor protects the Pokémon from critical hits. Takes 20% less damage from attacks."
   },
   "sturdy": {
     "name": "Sturdy",
@@ -45,7 +45,7 @@
   },
   "oblivious": {
     "name": "Oblivious",
-    "description": "The Pokémon is oblivious, keeping it from being infatuated or falling for taunts, and is unaffected by Intimidate."
+    "description": "The Pokémon is oblivious, keeping it from being infatuated or falling for taunts, and is unaffected by Intimidate and Scare."
   },
   "cloudNine": {
     "name": "Cloud Nine",
@@ -101,7 +101,7 @@
   },
   "levitate": {
     "name": "Levitate",
-    "description": "The Pokémon floats off the ground, making it immune to Ground-type moves, as well as Spikes, Toxic Spikes, and Sticky Web."
+    "description": "The Pokémon floats off the ground, making it immune to Ground-type moves, as well as Spikes, Toxic Spikes, and Sticky Web. Ups own Flying moves by 1.25x."
   },
   "effectSpore": {
     "name": "Effect Spore",
@@ -193,7 +193,7 @@
   },
   "flameBody": {
     "name": "Flame Body",
-    "description": "When the Pokémon is hit by a contact move, the attacker has a 30% chance of being burned."
+    "description": "30% chance to burn on contact, and 20% chance to burn on non-contact moves. Also 30% chance to burn on contact when attacking."
   },
   "runAway": {
     "name": "Run Away",
@@ -905,7 +905,7 @@
   },
   "psychicSurge": {
     "name": "Psychic Surge",
-    "description": "Turns the ground into Psychic Terrain for 5 turns when the Pokémon enters a battle." 
+    "description": "Turns the ground into Psychic Terrain for 5 turns when the Pokémon enters a battle."
   },
   "mistySurge": {
     "name": "Misty Surge",
@@ -1254,5 +1254,9 @@
   "spicySpray": {
     "name": "Spicy Spray",
     "description": "When the Pokémon takes damage from a move, it burns the attacker."
+  },
+  "scare": {
+    "name": "Scare",
+    "description": "Lowers foes' Sp. Atk by one stage on entry."
   }
 }
