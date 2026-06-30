@@ -622,4 +622,6 @@ export enum AbilityId {
   /** {@link https://bulbapedia.bulbagarden.net/wiki/Poison_Puppeteer_(ability) | Source} */
   POISON_PUPPETEER,
   SCARE,
+  JUGGERNAUT,
+  VIOLENT_RUSH,
 }

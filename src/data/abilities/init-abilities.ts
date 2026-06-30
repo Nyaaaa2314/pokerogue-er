@@ -164,6 +164,7 @@ import {
   ScareImmunityAbAttr,
   SpeedBoostAbAttr,
   StabBoostAbAttr,
+  StatDoubleAdderAbAttr,
   StatMultiplierAbAttr,
   StatStageChangeCopyAbAttr,
   StatStageChangeMultiplierAbAttr,
@@ -2178,6 +2179,21 @@ export function initAbilities() {
       .build(),
     new AbBuilder(AbilityId.SCARE, 9) //
       .attr(PostSummonStatStageChangeAbAttr, [{ stat: Stat.SPATK, stages: -1 }], false, false, true)
+      .build(),
+    new AbBuilder(AbilityId.JUGGERNAUT, 9) //
+      .attr(
+        StatDoubleAdderAbAttr,
+        Stat.ATK,
+        Stat.DEF,
+        0.2,
+        (_user, _target, move) => move.category === MoveCategory.PHYSICAL,
+      )
+      .attr(StatusEffectImmunityAbAttr, StatusEffect.PARALYSIS)
+      .attr(PostSummonHealStatusAbAttr, StatusEffect.PARALYSIS)
+      .build(),
+    new AbBuilder(AbilityId.VIOLENT_RUSH, 9)
+      .conditionalAttr(pokemon => pokemon.tempSummonData.waveTurnCount <= 1, StatMultiplierAbAttr, Stat.ATK, 1.2)
+      .conditionalAttr(pokemon => pokemon.tempSummonData.waveTurnCount <= 1, StatMultiplierAbAttr, Stat.SPD, 1.5)
       .build(),
   );
 }

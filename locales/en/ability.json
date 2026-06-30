@@ -1258,5 +1258,13 @@
   "scare": {
     "name": "Scare",
     "description": "Lowers foes' Sp. Atk by one stage on entry."
+  },
+  "juggernaut": {
+    "name": "Juggernaut",
+    "description": "Contact moves add 20% Def to attack. Paralysis-immune."
+  },
+  "violentRush": {
+    "name": "Violent Rush",
+    "description": "Boosts Speed by 50% + Attack by 20% on first turn."
   }
 }

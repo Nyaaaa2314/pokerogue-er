@@ -1671,6 +1671,39 @@ export class StatMultiplierAbAttr extends AbAttr {
   }
 }
 
+export class StatDoubleAdderAbAttr extends AbAttr {
+  private declare readonly _: never;
+  public readonly stat1: BattleStat;
+  public readonly stat2: BattleStat;
+  public readonly multiplier: number;
+  /**
+   *
+   *
+   * @remarks
+   * Currently only used by Juggernaut. This attribute adds X percent of stat2 onto stat1
+   */
+  private readonly condition?: PokemonAttackCondition;
+
+  constructor(stat1: BattleStat, stat2: BattleStat, multiplier: number, condition?: PokemonAttackCondition) {
+    super(false);
+
+    this.stat1 = stat1;
+    this.stat2 = stat2;
+    this.multiplier = multiplier;
+    if (condition != null) {
+      this.condition = condition;
+    }
+  }
+
+  override canApply({ pokemon, move, stat }: StatMultiplierAbAttrParams): boolean {
+    return stat === this.stat1 && (!this.condition || this.condition(pokemon, null, move));
+  }
+
+  override apply({ statVal }: StatMultiplierAbAttrParams): void {
+    statVal.value += this.stat2 * this.multiplier;
+  }
+}
+
 export interface AllyStatMultiplierAbAttrParams extends StatMultiplierAbAttrParams {
   /**
    * Whether abilities are being ignored during the interaction (e.g. due to a Mold-Breaker like effect).
@@ -6314,6 +6347,7 @@ export const AbilityAttrs = Object.freeze({
   WonderSkinAbAttr,
   AiMovegenMoveStatsAbAttr,
   SummonTerrainAiMovegenMoveStatsAbAttr,
+  StatDoubleAdderAbAttr,
 });
 
 /** A map of of all {@linkcode AbAttr} constructors */
