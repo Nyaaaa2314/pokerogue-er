@@ -284,8 +284,8 @@ export class PokedexPageUiHandler extends MessageUiHandler {
   private ability2: AbilityId | undefined;
   private abilityHidden: AbilityId | undefined;
   private passive: AbilityId;
+  private passives: AbilityId[];
   private hasPassive: boolean;
-  private hasPassives: AbilityId[];
   private hasAbilities: [ability1: number, ability2: number, hiddenAbility: number];
   private biomes: readonly BiomeTierTimeOfDay[] = [];
   private baseStats: number[];
@@ -875,7 +875,7 @@ export class PokedexPageUiHandler extends MessageUiHandler {
     this.tmMoves = species.getTms(formKey).sort((a, b) => (allMoves[a].name > allMoves[b].name ? 1 : -1));
 
     this.passive = speciesDataRegistry.getPassive(species.speciesId, this.formIndex);
-    this.hasPassives = speciesDataRegistry.getPassives(species.speciesId, this.formIndex);
+    this.passives = speciesDataRegistry.getPassives(species.speciesId, this.formIndex);
 
     const starterData = globalScene.gameData.starterData[this.starterId];
     const abilityAttr = starterData.abilityAttr;
@@ -1471,7 +1471,7 @@ export class PokedexPageUiHandler extends MessageUiHandler {
                   });
                 }
 
-                if (this.hasPassives) {
+                if (this.passives) {
                   options.push({
                     label: "Passives:",
                     skip: true,
@@ -1479,7 +1479,7 @@ export class PokedexPageUiHandler extends MessageUiHandler {
                     handler: () => false,
                     onHover: () => this.infoOverlay.clear(),
                   });
-                  for (const passiveAbility of this.hasPassives) {
+                  for (const passiveAbility of this.passives) {
                     const passiveDefinition = allAbilities.at(passiveAbility) ?? { name: "", description: "" };
                     options.push({
                       label: passiveDefinition.name,
