@@ -2195,6 +2195,31 @@ export function initAbilities() {
       .conditionalAttr(pokemon => pokemon.tempSummonData.waveTurnCount <= 1, StatMultiplierAbAttr, Stat.ATK, 1.2)
       .conditionalAttr(pokemon => pokemon.tempSummonData.waveTurnCount <= 1, StatMultiplierAbAttr, Stat.SPD, 1.5)
       .build(),
+    new AbBuilder(AbilityId.SPEED_FORCE, 9)
+      .attr(
+        StatDoubleAdderAbAttr,
+        Stat.ATK,
+        Stat.SPD,
+        0.2,
+        (_user, _target, move) => move.category === MoveCategory.PHYSICAL,
+      )
+      .build(),
+    new AbBuilder(AbilityId.POWER_CORE, 9)
+      .attr(
+        StatDoubleAdderAbAttr,
+        Stat.ATK,
+        Stat.DEF,
+        0.2,
+        (_user, _target, move) => move.category === MoveCategory.PHYSICAL,
+      )
+      .attr(
+        StatDoubleAdderAbAttr,
+        Stat.SPATK,
+        Stat.SPDEF,
+        0.2,
+        (_user, _target, move) => move.category === MoveCategory.SPECIAL,
+      )
+      .build(),
   );
 }
 

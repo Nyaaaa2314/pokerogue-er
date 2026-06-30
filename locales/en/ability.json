@@ -1266,5 +1266,13 @@
   "violentRush": {
     "name": "Violent Rush",
     "description": "Boosts Speed by 50% + Attack by 20% on first turn."
+  },
+  "speedForce": {
+    "name": "Speed Force",
+    "description": "Contact moves use 20% of its Speed stat additionally."
+  },
+  "powerCore": {
+    "name": "Power Core",
+    "description": "The Pokémon uses +20% of its Defense or SpDef during moves."
   }
 }

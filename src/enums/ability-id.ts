@@ -624,4 +624,6 @@ export enum AbilityId {
   SCARE,
   JUGGERNAUT,
   VIOLENT_RUSH,
+  SPEED_FORCE,
+  POWER_CORE,
 }
