@@ -285,6 +285,7 @@ export class PokedexPageUiHandler extends MessageUiHandler {
   private abilityHidden: AbilityId | undefined;
   private passive: AbilityId;
   private hasPassive: boolean;
+  private hasPassives: AbilityId[];
   private hasAbilities: [ability1: number, ability2: number, hiddenAbility: number];
   private biomes: readonly BiomeTierTimeOfDay[] = [];
   private baseStats: number[];
@@ -874,6 +875,7 @@ export class PokedexPageUiHandler extends MessageUiHandler {
     this.tmMoves = species.getTms(formKey).sort((a, b) => (allMoves[a].name > allMoves[b].name ? 1 : -1));
 
     this.passive = speciesDataRegistry.getPassive(species.speciesId, this.formIndex);
+    this.hasPassives = speciesDataRegistry.getPassives(species.speciesId, this.formIndex);
 
     const starterData = globalScene.gameData.starterData[this.starterId];
     const abilityAttr = starterData.abilityAttr;
@@ -1469,21 +1471,23 @@ export class PokedexPageUiHandler extends MessageUiHandler {
                   });
                 }
 
-                if (this.passive) {
+                if (this.hasPassives) {
                   options.push({
-                    label: i18next.t("pokedexUiHandler:passive"),
+                    label: "Passives:",
                     skip: true,
                     style: TextStyle.MONEY_WINDOW,
                     handler: () => false,
                     onHover: () => this.infoOverlay.clear(),
                   });
-                  const ability = allAbilities.at(this.passive) ?? { name: "", description: "" };
-                  options.push({
-                    label: ability.name,
-                    style: this.hasPassive ? TextStyle.SETTINGS_VALUE : TextStyle.SHADOW_TEXT,
-                    handler: () => false,
-                    onHover: () => this.infoOverlay.show(ability.description),
-                  });
+                  for (const passiveAbility of this.hasPassives) {
+                    const passiveDefinition = allAbilities.at(passiveAbility) ?? { name: "", description: "" };
+                    options.push({
+                      label: passiveDefinition.name,
+                      style: this.hasPassive ? TextStyle.SETTINGS_VALUE : TextStyle.SHADOW_TEXT,
+                      handler: () => false,
+                      onHover: () => this.infoOverlay.show(passiveDefinition.description),
+                    });
+                  }
                 }
 
                 options.push({

@@ -11,7 +11,7 @@
   "confirmExit": "Do you want to exit?",
   "showNature": "Show its unlocked natures.",
   "showBaseStats": "Show its base stats.",
-  "showAbilities": "Show its unlocked abilities and passive.",
+  "showAbilities": "Show its unlocked abilities and passives.",
   "showLevelMoves": "Show moves it can learn by leveling up.",
   "onlyEvolutionMove": "This move is learnt right after evolving.",
   "onlyRecallMove": "This move can be recalled with a Memory Mushroom.",
